@@ -33,6 +33,48 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
+# 自定义CSS样式
+def set_custom_style():
+    st.markdown("""
+        <style>
+        .main-header {
+            font-size: 42px;
+            font-weight: bold;
+            color: #1E3A8A;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .sub-header {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1E3A8A;
+        }
+        .normal-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .team-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .highlight {
+            color: #FF4B4B;
+            font-weight: bold;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 # 页面设置
 st.set_page_config(page_title="智能人民币投放系统", layout="wide")
 
@@ -41,6 +83,9 @@ try:
     add_bg_from_local('background.png')
 except Exception as e:
     st.warning(f"背景图片加载失败: {str(e)}")
+
+# 添加自定义样式
+set_custom_style()
 
 # 系统提示初始化
 if "system_prompt" not in st.session_state:
@@ -63,77 +108,231 @@ if 'logged_in' not in st.session_state:
     st.session_state.current_user = None
     st.session_state.user_role = None
 
-if not st.session_state.logged_in:
-    st.title("用户登录")
-    username = st.text_input("用户名")
-    password = st.text_input("密码", type="password")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("登录"):
-            if username in st.session_state.users_db and st.session_state.users_db[username]["password"] == password:
-                st.session_state.logged_in = True
-                st.session_state.current_user = username
-                st.session_state.user_role = st.session_state.users_db[username]["role"]
-                st.success("登录成功")
-                st.experimental_rerun()
-            else:
-                st.error("用户名或密码错误")
+# 产品宣传页面
+def show_product_promotion():
+    st.markdown('<div class="main-header">智能人民币投放系统</div>', unsafe_allow_html=True)
+    st.markdown('<div class="normal-text">由启盛科技倾力打造的新一代智能现金管理解决方案</div>', unsafe_allow_html=True)
+    
+    # 产品宣传图片（可替换为实际产品图片）
+    col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        if st.button("注册新用户"):
-            if username and password:
-                if username not in st.session_state.users_db:
-                    st.session_state.users_db[username] = {"password": password, "role": "user"}
-                    st.success("注册成功，请登录")
-                else:
-                    st.error("用户名已存在")
-            else:
-                st.error("请输入用户名和密码")
-    st.stop()
-
-# 主界面
-st.sidebar.title(f"欢迎您，{st.session_state.current_user}")
-
-# 添加用户管理模块到侧边栏
-with st.sidebar.expander("用户设置"):
-    if st.button("修改密码"):
-        st.session_state.show_password_change = True
-    if st.button("用户资料"):
-        st.session_state.show_profile = True
-    if st.button("退出登录"):
-        st.session_state.logged_in = False
-        st.experimental_rerun()
-
-# 根据用户角色显示不同的模式选项
-if st.session_state.user_role == "administrator":
-    mode = st.sidebar.selectbox("选择模式", ["操控模式", "开发者维护模式", "LLM对话", "用户管理"])
-else:
-    mode = st.sidebar.selectbox("选择模式", ["操控模式", "LLM对话"])
-
-# 显示密码修改界面
-if 'show_password_change' in st.session_state and st.session_state.show_password_change:
-    with st.expander("密码修改", expanded=True):
-        old_password = st.text_input("旧密码", type="password", key="old_pwd")
-        new_password = st.text_input("新密码", type="password", key="new_pwd")
-        confirm_password = st.text_input("确认新密码", type="password", key="confirm_pwd")
+        st.image("background.png", use_column_width=True, caption="智能人民币投放系统")
+    
+    # 核心亮点
+    st.markdown('<div class="sub-header">核心亮点</div>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <h3>智能识别</h3>
+            <p>采用先进的颜色传感器技术，精准识别不同面额人民币，准确率高达99.9%</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        if st.button("确认修改"):
-            if st.session_state.users_db[st.session_state.current_user]["password"] == old_password:
-                if new_password == confirm_password:
-                    st.session_state.users_db[st.session_state.current_user]["password"] = new_password
-                    st.success("密码修改成功")
-                    st.session_state.show_password_change = False
-                else:
-                    st.error("两次输入的新密码不一致")
-            else:
-                st.error("旧密码不正确")
+        st.markdown("""
+        <div class="feature-card">
+            <h3>安全可靠</h3>
+            <p>多重验证机制，防伪技术与物理隔离设计，确保您的资金绝对安全</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h3>便捷操作</h3>
+            <p>人性化界面设计，简单直观的操作流程，老人小孩都能轻松使用</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="feature-card">
+            <h3>智能助手</h3>
+            <p>内置AI助手，随时为您解答问题，提供专业指导</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # 号召性用语
+    st.markdown("""
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+        <h2>未来已来，智能先行</h2>
+        <p style="font-size: 18px;">立即体验启盛科技带来的智能金融新时代</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# 显示用户资料界面
-if 'show_profile' in st.session_state and st.session_state.show_profile:
-    with st.expander("用户资料", expanded=True):
-        st.write(f"用户名: {st.session_state.current_user}")
-        st.write(f"用户角色: {st.session_state.user_role}")
-        if st.button("关闭"):
-            st.session_state.show_profile = False
+# 产品详情页面
+def show_product_details():
+    st.markdown('<div class="sub-header">产品详情</div>', unsafe_allow_html=True)
+    
+    # 产品概述
+    st.markdown("""
+    <div class="normal-text">
+        <p>启盛智能人民币投放系统是一款专为银行、商场、社区服务站等场所设计的现金管理设备。系统集成了先进的识别技术和精密的机械控制，能够自动完成存取款、现金分类和保管等功能。</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # 技术规格
+    st.markdown('<div class="sub-header">技术规格</div>', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <h3>硬件规格</h3>
+            <ul>
+                <li>尺寸：60cm × 40cm × 150cm</li>
+                <li>重量：80kg</li>
+                <li>显示屏：15.6英寸触控屏</li>
+                <li>电源：AC 220V, 50Hz</li>
+                <li>待机功耗：<5W</li>
+                <li>工作功耗：<100W</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h3>传感器规格</h3>
+            <ul>
+                <li>颜色传感器：TCS34725，RGB传感器</li>
+                <li>距离传感器：VL53L0X，TOF激光测距</li>
+                <li>识别精度：>99.9%</li>
+                <li>处理速度：<0.5秒/张</li>
+                <li>容纳能力：最多1000张</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # 功能详解
+    st.markdown('<div class="sub-header">功能详解</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="feature-card">
+        <h3>自动识别与分类</h3>
+        <p>系统采用高精度颜色传感器，能够准确识别不同面额的人民币。先进的图像处理算法能够在0.5秒内完成识别和验证，之后通过精密舵机控制将纸币分类存放。</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="feature-card">
+        <h3>安全存取机制</h3>
+        <p>采用双重验证机制确保交易安全。存款时，系统先验证纸币真伪，再确认存入；取款时，通过密码与生物识别双重验证，确保资金安全。所有操作都有详细记录，可追溯查询。</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="feature-card">
+        <h3>智能交互系统</h3>
+        <p>内置AI助手，可以语音交互，解答用户问题。系统支持多语言界面，适应不同用户需求。直观的操作流程设计，降低使用门槛，提升用户体验。</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # 应用场景
+    st.markdown('<div class="sub-header">应用场景</div>', unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="feature-card" style="text-align: center;">
+            <h3>银行网点</h3>
+            <p>减轻柜员工作负担，提高服务效率</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card" style="text-align: center;">
+            <h3>商场超市</h3>
+            <p>自助收银区现金处理，降低人力成本</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="feature-card" style="text-align: center;">
+            <h3>社区服务站</h3>
+            <p>为居民提供24小时自助现金服务</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+# 团队介绍页面
+def show_team_info():
+    st.markdown('<div class="sub-header">研发团队</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="normal-text" style="margin-bottom: 30px;">
+        <p>启盛科技研发团队由西安电子科技大学的六位优秀学生组成，致力于打造最智能、最安全的金融设备。团队成员各司其职，共同推进项目顺利进行。</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # 团队成员展示
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="team-card">
+            <h3>万子墨</h3>
+            <p>上位机开发</p>
+            <p>西安电子科技大学学生，负责系统上位机设计与开发</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="team-card">
+            <h3>黄永兴</h3>
+            <p>FPGA开发工程师</p>
+            <p>西安电子科技大学学生，专注FPGA设计与实现</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="team-card">
+            <h3>何家乐</h3>
+            <p>微处理器(MCU)工程师</p>
+            <p>西安电子科技大学学生，负责底层控制系统开发</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="team-card">
+            <h3>郝家乐</h3>
+            <p>网页开发工程师</p>
+            <p>西安电子科技大学学生，负责Web前端设计与实现</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="team-card">
+            <h3>黄宪政</h3>
+            <p>机械工程师</p>
+            <p>西安电子科技大学学生，负责系统机械结构设计与加工</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="team-card">
+            <h3>邬宏扬</h3>
+            <p>项目秘书</p>
+            <p>西安电子科技大学学生，负责项目协调与文档管理</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # 团队理念
+    st.markdown('<div class="sub-header">团队理念</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="feature-card">
+        <p style="font-size: 20px; text-align: center; font-style: italic;">"科技改变金融，创新驱动未来"</p>
+        <p>启盛科技团队秉持用户至上、技术创新、安全可靠的核心价值观，致力于通过技术创新解决金融行业痛点，为用户提供更便捷、更安全的金融服务体验。</p>
+        <p>作为西安电子科技大学的学生团队，我们将所学知识与实际应用相结合，用年轻的视角和创新的思维，探索智能金融设备的新可能。</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # 模拟硬件通信函数
 def send_command_to_microcontroller(command):
@@ -142,8 +341,8 @@ def send_command_to_microcontroller(command):
 def send_command_to_fpga(command):
     st.info(f"发送命令到FPGA：{command}")
 
-# 操控模式界面
-if mode == "操控模式":
+# 操作模式界面
+def show_operation_mode():
     st.title("操控模式")
     option = st.radio("请选择操作：", ["开始存钱", "我要取钱", "语音指导"])
     if option == "开始存钱":
@@ -160,8 +359,8 @@ if mode == "操控模式":
     else:
         st.audio("instruction_audio.mp3")  # 假设本地存在
 
-# 维护模式界面 - 仅对管理员开放
-elif mode == "开发者维护模式":
+# 维护模式界面
+def show_maintenance_mode():
     st.title("维护模式")
     st.subheader("传感器与舵机控制")
     col1, col2 = st.columns(2)
@@ -176,8 +375,8 @@ elif mode == "开发者维护模式":
         if st.button("旋转抽屉舵机"):
             send_command_to_fpga("旋转抽屉")
 
-# 用户管理界面 - 仅对管理员开放
-elif mode == "用户管理":
+# 用户管理界面
+def show_user_management():
     st.title("用户管理")
     
     with st.expander("所有用户"):
@@ -200,7 +399,7 @@ elif mode == "用户管理":
             st.error("请填写所有字段")
 
 # LLM 对话界面
-elif mode == "LLM对话":
+def show_llm_chat():
     st.title("与智能助手对话")
 
     # 初始化用户特定的对话历史
@@ -279,3 +478,137 @@ elif mode == "LLM对话":
             st.divider()
     else:
         st.info("还没有对话，发送消息开始聊天吧！")
+
+# 密码修改界面
+def show_password_change():
+    with st.expander("密码修改", expanded=True):
+        old_password = st.text_input("旧密码", type="password", key="old_pwd")
+        new_password = st.text_input("新密码", type="password", key="new_pwd")
+        confirm_password = st.text_input("确认新密码", type="password", key="confirm_pwd")
+        
+        if st.button("确认修改"):
+            if st.session_state.users_db[st.session_state.current_user]["password"] == old_password:
+                if new_password == confirm_password:
+                    st.session_state.users_db[st.session_state.current_user]["password"] = new_password
+                    st.success("密码修改成功")
+                    st.session_state.show_password_change = False
+                else:
+                    st.error("两次输入的新密码不一致")
+            else:
+                st.error("旧密码不正确")
+
+# 用户资料界面
+def show_user_profile():
+    with st.expander("用户资料", expanded=True):
+        st.write(f"用户名: {st.session_state.current_user}")
+        st.write(f"用户角色: {st.session_state.user_role}")
+        if st.button("关闭"):
+            st.session_state.show_profile = False
+
+# 主应用入口
+def main():
+    # 未登录时显示登录界面
+    if not st.session_state.logged_in:
+        # 添加登录前的产品展示（宣传页）
+        show_product_promotion()
+        
+        # 登录区域（放在侧边栏中，不影响宣传页展示）
+        with st.sidebar:
+            st.title("用户登录")
+            username = st.text_input("用户名")
+            password = st.text_input("密码", type="password")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("登录"):
+                    if username in st.session_state.users_db and st.session_state.users_db[username]["password"] == password:
+                        st.session_state.logged_in = True
+                        st.session_state.current_user = username
+                        st.session_state.user_role = st.session_state.users_db[username]["role"]
+                        st.success("登录成功")
+                        st.experimental_rerun()
+                    else:
+                        st.error("用户名或密码错误")
+            with col2:
+                if st.button("注册"):
+                    if username and password:
+                        if username not in st.session_state.users_db:
+                            st.session_state.users_db[username] = {"password": password, "role": "user"}
+                            st.success("注册成功，请登录")
+                        else:
+                            st.error("用户名已存在")
+                    else:
+                        st.error("请输入用户名和密码")
+    else:
+        # 登录后显示主界面
+        st.sidebar.title(f"欢迎您，{st.session_state.current_user}")
+        
+        # 添加用户管理模块到侧边栏
+        with st.sidebar.expander("用户设置"):
+            if st.button("修改密码"):
+                st.session_state.show_password_change = True
+            if st.button("用户资料"):
+                st.session_state.show_profile = True
+            if st.button("退出登录"):
+                st.session_state.logged_in = False
+                st.experimental_rerun()
+        
+        # 显示密码修改界面
+        if 'show_password_change' in st.session_state and st.session_state.show_password_change:
+            show_password_change()
+        
+        # 显示用户资料界面
+        if 'show_profile' in st.session_state and st.session_state.show_profile:
+            show_user_profile()
+        
+        # 根据用户角色显示不同的Tab选项
+        if st.session_state.user_role == "administrator":
+            tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+                "产品宣传", "产品详情", "团队介绍", "操控模式", "维护模式", "管理功能"
+            ])
+            
+            with tab1:
+                show_product_promotion()
+            
+            with tab2:
+                show_product_details()
+            
+            with tab3:
+                show_team_info()
+            
+            with tab4:
+                show_operation_mode()
+            
+            with tab5:
+                show_maintenance_mode()
+            
+            with tab6:
+                tab6_1, tab6_2 = st.tabs(["用户管理", "LLM对话"])
+                with tab6_1:
+                    show_user_management()
+                with tab6_2:
+                    show_llm_chat()
+        else:
+            tab1, tab2, tab3, tab4 = st.tabs([
+                "产品宣传", "产品详情", "团队介绍", "功能"
+            ])
+            
+            with tab1:
+                show_product_promotion()
+            
+            with tab2:
+                show_product_details()
+            
+            with tab3:
+                show_team_info()
+            
+            with tab4:
+                tab4_1, tab4_2 = st.tabs(["操控模式", "LLM对话"])
+                with tab4_1:
+                    show_operation_mode()
+                with tab4_2:
+                    show_llm_chat()
+
+# 运行主应用
+if __name__ == "__main__":
+    main()
