@@ -10,7 +10,7 @@ st.write("## 你好，jiale")
 st.image("./自拍照fixed.png",width=500)
 
 df = pd.DataFrame({
-    "兴趣":["社会科学","自媒体","AI+science科研"],
+    "兴趣":["社会科学","微处理器","AI4science"],
     "合作意愿顺序":[2,0,1],
     "开价":[0,300,0]
 })
