@@ -4,7 +4,7 @@ import json
 import os
 import base64
 
-# 配置 OpenRouter API
+# API config
 API_KEY = "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"
 BASE_URL = "https://openrouter.ai/api/v1"
 headers = {
@@ -12,7 +12,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# 设置背景图片
+# Set background
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
@@ -33,7 +33,7 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
-# 自定义CSS样式
+# CSS styling
 def set_custom_style():
     st.markdown("""
         <style>
@@ -75,19 +75,18 @@ def set_custom_style():
         </style>
     """, unsafe_allow_html=True)
 
-# 页面设置
-st.set_page_config(page_title="智能人民币投放系统", layout="wide")
+# Page setup
+st.set_page_config(page_title="Smart RMB Dispensing System", layout="wide")
 
-# 添加背景图片
+# Add background
 try:
     add_bg_from_local('background.png')
 except Exception as e:
-    st.warning(f"背景图片加载失败: {str(e)}")
+    st.warning(f"Background image failed to load: {str(e)}")
 
-# 添加自定义样式
 set_custom_style()
 
-# 系统提示初始化
+# System prompt
 if "system_prompt" not in st.session_state:
     st.session_state.system_prompt = """您是一个专业的人民币投放系统助手，由启盛公司开发。
 您可以帮助用户解决存钱、取钱和设备维护问题。
@@ -95,30 +94,28 @@ if "system_prompt" not in st.session_state:
 启盛公司是一家专注于智能金融设备开发的高科技企业，这款人民币投放系统是公司的明星产品，用于便捷安全地管理现金。
 当用户遇到问题时，请提供专业且友好的建议。"""
 
-# 模拟用户数据库
+# User DB
 if 'users_db' not in st.session_state:
     st.session_state.users_db = {
         "admin": {"password": "admin123", "role": "administrator"},
         "user1": {"password": "user123", "role": "user"}
     }
 
-# 用户登录模块
+# Login state
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.current_user = None
     st.session_state.user_role = None
 
-# 产品宣传页面
+# Product promo
 def show_product_promotion():
     st.markdown('<div class="main-header">智能人民币投放系统</div>', unsafe_allow_html=True)
     st.markdown('<div class="normal-text">由启盛科技倾力打造的新一代智能现金管理解决方案</div>', unsafe_allow_html=True)
     
-    # 产品宣传图片（可替换为实际产品图片）
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
         st.image("background.png", use_column_width=True, caption="智能人民币投放系统")
     
-    # 核心亮点
     st.markdown('<div class="sub-header">核心亮点</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
@@ -153,7 +150,6 @@ def show_product_promotion():
         </div>
         """, unsafe_allow_html=True)
     
-    # 号召性用语
     st.markdown("""
     <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
         <h2>未来已来，智能先行</h2>
@@ -161,18 +157,16 @@ def show_product_promotion():
     </div>
     """, unsafe_allow_html=True)
 
-# 产品详情页面
+# Product details
 def show_product_details():
     st.markdown('<div class="sub-header">产品详情</div>', unsafe_allow_html=True)
     
-    # 产品概述
     st.markdown("""
     <div class="normal-text">
         <p>启盛智能人民币投放系统是一款专为银行、商场、社区服务站等场所设计的现金管理设备。系统集成了先进的识别技术和精密的机械控制，能够自动完成存取款、现金分类和保管等功能。</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # 技术规格
     st.markdown('<div class="sub-header">技术规格</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
@@ -206,7 +200,6 @@ def show_product_details():
         </div>
         """, unsafe_allow_html=True)
     
-    # 功能详解
     st.markdown('<div class="sub-header">功能详解</div>', unsafe_allow_html=True)
     
     st.markdown("""
@@ -230,7 +223,6 @@ def show_product_details():
     </div>
     """, unsafe_allow_html=True)
     
-    # 应用场景
     st.markdown('<div class="sub-header">应用场景</div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
@@ -259,7 +251,7 @@ def show_product_details():
         </div>
         """, unsafe_allow_html=True)
 
-# 团队介绍页面
+# Team info
 def show_team_info():
     st.markdown('<div class="sub-header">研发团队</div>', unsafe_allow_html=True)
     
@@ -269,7 +261,6 @@ def show_team_info():
     </div>
     """, unsafe_allow_html=True)
     
-    # 团队成员展示
     col1, col2, col3 = st.columns(3)
     
     with col1:
@@ -323,7 +314,6 @@ def show_team_info():
         </div>
         """, unsafe_allow_html=True)
     
-    # 团队理念
     st.markdown('<div class="sub-header">团队理念</div>', unsafe_allow_html=True)
     
     st.markdown("""
@@ -334,14 +324,14 @@ def show_team_info():
     </div>
     """, unsafe_allow_html=True)
 
-# 模拟硬件通信函数
+# Hardware simulation
 def send_command_to_microcontroller(command):
     st.info(f"发送命令到微控制器：{command}")
 
 def send_command_to_fpga(command):
     st.info(f"发送命令到FPGA：{command}")
 
-# 操作模式界面
+# Operation mode
 def show_operation_mode():
     st.title("操控模式")
     option = st.radio("请选择操作：", ["开始存钱", "我要取钱", "语音指导"])
@@ -357,9 +347,9 @@ def show_operation_mode():
         if st.button("收回抽屉"):
             send_command_to_fpga("收回抽屉")
     else:
-        st.audio("instruction_audio.mp3")  # 假设本地存在
+        st.audio("instruction_audio.mp3")
 
-# 维护模式界面
+# Maintenance mode
 def show_maintenance_mode():
     st.title("维护模式")
     st.subheader("传感器与舵机控制")
@@ -375,7 +365,7 @@ def show_maintenance_mode():
         if st.button("旋转抽屉舵机"):
             send_command_to_fpga("旋转抽屉")
 
-# 用户管理界面
+# User management
 def show_user_management():
     st.title("用户管理")
     
@@ -398,23 +388,19 @@ def show_user_management():
         else:
             st.error("请填写所有字段")
 
-# LLM 对话界面
+# LLM chat
 def show_llm_chat():
     st.title("与智能助手对话")
 
-    # 初始化用户特定的对话历史
     if "user_chat_histories" not in st.session_state:
         st.session_state.user_chat_histories = {}
     
-    # 为当前用户获取或创建对话历史
     current_user = st.session_state.current_user
     if current_user not in st.session_state.user_chat_histories:
         st.session_state.user_chat_histories[current_user] = []
     
-    # 当前用户的聊天历史
     current_chat_history = st.session_state.user_chat_histories[current_user]
 
-    # 允许编辑系统提示（仅对管理员开放）
     if st.session_state.user_role == "administrator":
         with st.expander("编辑背景知识库"):
             st.session_state.system_prompt = st.text_area(
@@ -427,21 +413,17 @@ def show_llm_chat():
 
     if st.button("发送") and user_input:
         with st.spinner("AI思考中..."):
-            # 构建包含系统提示和历史对话的完整消息列表
             messages = [
                 {"role": "system", "content": st.session_state.system_prompt}
             ]
 
-            # 添加历史对话记录
             for history_item in current_chat_history:
                 user_msg, bot_msg = history_item
                 messages.append({"role": "user", "content": user_msg})
                 messages.append({"role": "assistant", "content": bot_msg})
 
-            # 添加当前用户问题
             messages.append({"role": "user", "content": user_input})
 
-            # 发送请求
             try:
                 body = {
                     "model": "deepseek/deepseek-chat-v3-0324:free",
@@ -459,17 +441,13 @@ def show_llm_chat():
                 st.error(f"发生错误: {str(e)}")
                 reply = "连接失败，请检查网络或API配置。"
 
-            # 将新对话添加到当前用户的历史记录
             current_chat_history.append((user_input, reply))
             st.session_state.user_chat_histories[current_user] = current_chat_history
             
-            # 重新渲染页面以显示新对话
             st.experimental_rerun()
 
-    # 分隔线
     st.divider()
 
-    # 显示聊天历史
     st.subheader("对话历史")
     if current_chat_history:
         for user_msg, bot_msg in reversed(current_chat_history):
@@ -479,7 +457,7 @@ def show_llm_chat():
     else:
         st.info("还没有对话，发送消息开始聊天吧！")
 
-# 密码修改界面
+# Password change
 def show_password_change():
     with st.expander("密码修改", expanded=True):
         old_password = st.text_input("旧密码", type="password", key="old_pwd")
@@ -497,7 +475,7 @@ def show_password_change():
             else:
                 st.error("旧密码不正确")
 
-# 用户资料界面
+# User profile
 def show_user_profile():
     with st.expander("用户资料", expanded=True):
         st.write(f"用户名: {st.session_state.current_user}")
@@ -505,14 +483,11 @@ def show_user_profile():
         if st.button("关闭"):
             st.session_state.show_profile = False
 
-# 主应用入口
+# Main app
 def main():
-    # 未登录时显示登录界面
     if not st.session_state.logged_in:
-        # 添加登录前的产品展示（宣传页）
         show_product_promotion()
         
-        # 登录区域（放在侧边栏中，不影响宣传页展示）
         with st.sidebar:
             st.title("用户登录")
             username = st.text_input("用户名")
@@ -540,10 +515,8 @@ def main():
                     else:
                         st.error("请输入用户名和密码")
     else:
-        # 登录后显示主界面
         st.sidebar.title(f"欢迎您，{st.session_state.current_user}")
         
-        # 添加用户管理模块到侧边栏
         with st.sidebar.expander("用户设置"):
             if st.button("修改密码"):
                 st.session_state.show_password_change = True
@@ -553,15 +526,12 @@ def main():
                 st.session_state.logged_in = False
                 st.experimental_rerun()
         
-        # 显示密码修改界面
         if 'show_password_change' in st.session_state and st.session_state.show_password_change:
             show_password_change()
         
-        # 显示用户资料界面
         if 'show_profile' in st.session_state and st.session_state.show_profile:
             show_user_profile()
         
-        # 根据用户角色显示不同的Tab选项
         if st.session_state.user_role == "administrator":
             tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
                 "产品宣传", "产品详情", "团队介绍", "操控模式", "维护模式", "管理功能"
@@ -609,6 +579,6 @@ def main():
                 with tab4_2:
                     show_llm_chat()
 
-# 运行主应用
+# Run app
 if __name__ == "__main__":
     main()
