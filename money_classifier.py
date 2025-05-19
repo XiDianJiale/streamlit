@@ -395,7 +395,7 @@ if 'logged_in' not in st.session_state:
     st.session_state.current_user = None
     st.session_state.user_role = None
 
-# 全局聊天历史，用于底部聊天框
+# 全局聊天历史，用于底部聊天框 v3：修改了固定无意义的东西，
 if "bottom_chat_history" not in st.session_state:
     st.session_state.bottom_chat_history = []
 
@@ -408,7 +408,7 @@ def show_product_promotion():
     st.markdown('<div class="main-header">智能人民币投放系统</div>', unsafe_allow_html=True)
     st.markdown('<div class="normal-text">由启盛科技倾力打造的新一代智能现金管理解决方案</div>', unsafe_allow_html=True)
     
-    # 使用HTML方式显示产品主图，控制尺寸一致
+    # 使用HTML方式显示产品主图，控制尺寸一致，但是不能直接使用原声的图片，需要使用base64编码，这里是streamlit特殊需要照顾的地方
     st.markdown(
         f"""
         <div style="display: flex; justify-content: center; margin: 30px 0;">
@@ -477,7 +477,7 @@ def show_product_details():
     
     st.markdown('<div class="sub-header delay-100">产品外观</div>', unsafe_allow_html=True)
     
-    # 使用改进的动画效果展示产品图片
+    # 使用改进的动画效果展示产品图片（放弃渐入渐出的效果，不适配streamlit的app develop
     product_images_html = f"""
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin: 20px 0;">
         <div style="width: 32%;">
@@ -521,12 +521,12 @@ def show_product_details():
         <div class="feature-card animate-fade-left" style="animation-delay: 0.4s;">
             <h3>硬件规格</h3>
             <ul>
-                <li>尺寸：60cm × 40cm × 150cm</li>
-                <li>重量：80kg</li>
-                <li>显示屏：15.6英寸触控屏</li>
-                <li>电源：AC 220V, 50Hz</li>
-                <li>待机功耗：<5W</li>
-                <li>工作功耗：<100W</li>
+                <li>尺寸：60cm × 40cm × 100cm</li>
+                <li>重量：15kg</li>
+                <li>显示屏：上位机平板显示器</li>
+                <li>电源：5V 3A</li>
+                <li>待机功耗：<1w</li>
+                <li>工作功耗：<20w</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -537,10 +537,10 @@ def show_product_details():
             <h3>传感器规格</h3>
             <ul>
                 <li>颜色传感器：TCS34725，RGB传感器</li>
-                <li>距离传感器：VL53L0X，TOF激光测距</li>
+                <li>距离传感器：VL6180</li>
                 <li>识别精度：>99.9%</li>
-                <li>处理速度：<0.5秒/张</li>
-                <li>容纳能力：最多1000张</li>
+                <li>处理速度：<2秒/张</li>
+                <li>容纳能力：</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -676,7 +676,7 @@ def send_command_to_microcontroller(command):
 def send_command_to_fpga(command):
     st.info(f"发送命令到FPGA：{command}")
 
-# Operation mode
+# Operation mode 这里的值可以后期传入服务器和mcu通信如果实现的话  IoT？？
 def show_operation_mode():
     st.title("操控模式")
     option = st.radio("请选择操作：", ["开始存钱", "我要取钱", "语音指导"])
@@ -753,7 +753,7 @@ def show_llm_chat():
                 height=200
             )
     
-    # 清空历史按钮
+    # 清空历史按钮god save the code
     if current_chat_history and st.button("清空对话历史"):
         st.session_state.user_chat_histories[current_user] = []
         st.rerun()
@@ -1053,10 +1053,10 @@ def main():
         
         st.markdown('</div>', unsafe_allow_html=True)
     
-    # 添加底部固定聊天界面
+
     with st.container():
         render_bottom_chat()
 
-# Run app
+
 if __name__ == "__main__":
     main()
