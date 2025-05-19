@@ -527,6 +527,9 @@ def show_product_details():
                 <li>电源：5V 3A</li>
                 <li>待机功耗：<1w</li>
                 <li>工作功耗：<20w</li>
+                <li>上位机：friendlyarm</li>
+                <li>下位机：STM32F411</li>
+                <li>FPGA：Xilinx</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
