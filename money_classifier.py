@@ -5,7 +5,7 @@ import os
 import base64
 
 # API config  #使用openrouter厂商提供的服务
-API_KEY = "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"
+API_KEY = "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"
 BASE_URL = "https://openrouter.ai/api/v1"
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -777,7 +777,7 @@ def show_llm_chat():
 
             try:
                 body = {
-                    "model": "deepseek/deepseek-chat-v3-0324:free",
+                    "model": "deepseek/deepseek-v3-base:free",
                     "messages": messages
                 }
                 response = requests.post(BASE_URL + "/chat/completions", headers=headers, data=json.dumps(body))
@@ -952,7 +952,7 @@ def render_bottom_chat():
             try:
                 # 调用API
                 body = {
-                    "model": "deepseek/deepseek-chat-v3-0324:free",
+                    "model": "deepseek/deepseek-v3-base:free",
                     "messages": messages
                 }
                 response = requests.post(BASE_URL + "/chat/completions", headers=headers, data=json.dumps(body))
