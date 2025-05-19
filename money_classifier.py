@@ -4,9 +4,9 @@ import json
 import os
 import base64
 
-# API config  #使用openrouter厂商提供的服务
-API_KEY = "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"
-BASE_URL = "https://openrouter.ai/api/v1"
+# API config - 更换为DeepSeek API
+API_KEY = "sk-88505d9271714011b8636d2242ba6b59"
+BASE_URL = "https://api.deepseek.com"
 headers = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
@@ -756,7 +756,7 @@ def show_llm_chat():
                 height=200
             )
     
-    # 清空历史按钮god save the code
+    # 清空历史按钮
     if current_chat_history and st.button("清空对话历史"):
         st.session_state.user_chat_histories[current_user] = []
         st.rerun()
@@ -779,18 +779,22 @@ def show_llm_chat():
             messages.append({"role": "user", "content": user_input})
 
             try:
-                body = {
-                    "model": "deepseek/deepseek-v3-base:free",
-                    "messages": messages
-                }
-                response = requests.post(BASE_URL + "/chat/completions", headers=headers, data=json.dumps(body))
-
-                if response.status_code == 200:
-                    reply = response.json()["choices"][0]["message"]["content"]
-                else:
-                    st.error(f"API错误: {response.status_code}")
-                    st.error(f"错误信息: {response.text}")
-                    reply = f"请求失败，状态码: {response.status_code}。请检查API配置。"
+                # 使用DeepSeek API
+                from openai import OpenAI
+                
+                # 创建客户端
+                client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+                
+                # 发送请求
+                response = client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=messages,
+                    stream=False
+                )
+                
+                # 获取回复
+                reply = response.choices[0].message.content
+                
             except Exception as e:
                 st.error(f"发生错误: {str(e)}")
                 reply = "连接失败，请检查网络或API配置。"
@@ -953,17 +957,22 @@ def render_bottom_chat():
         
         with st.spinner("AI正在思考..."):
             try:
-                # 调用API
-                body = {
-                    "model": "deepseek/deepseek-v3-base:free",
-                    "messages": messages
-                }
-                response = requests.post(BASE_URL + "/chat/completions", headers=headers, data=json.dumps(body))
+                # 使用DeepSeek API
+                from openai import OpenAI
                 
-                if response.status_code == 200:
-                    reply = response.json()["choices"][0]["message"]["content"]
-                else:
-                    reply = f"请求失败，状态码: {response.status_code}。请检查API配置。"
+                # 创建客户端
+                client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+                
+                # 发送请求
+                response = client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=messages,
+                    stream=False
+                )
+                
+                # 获取回复
+                reply = response.choices[0].message.content
+                
             except Exception as e:
                 reply = f"发生错误: {str(e)}"
             
